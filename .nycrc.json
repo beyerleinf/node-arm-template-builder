@@ -1,0 +1,7 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts", "dist"],
+  "reporter": ["text-summary", "html", "json"],
+  "all": true
+}
