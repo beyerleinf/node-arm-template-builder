@@ -3,5 +3,16 @@
   "env": {
     "mocha": true
   },
-  "plugins": ["radar", "security-node"]
+  "plugins": ["radar", "security-node"],
+  "overrides": [
+    {
+      "files": "**/*.spec.ts",
+      "rules": {
+        "node/no-unpublished-require": 0,
+        "node/no-unpublished-import": 0,
+        "node/no-missing-require": 0,
+        "radar/no-duplicate-string": 0
+      }
+    }
+  ]
 }

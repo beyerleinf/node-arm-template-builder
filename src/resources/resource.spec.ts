@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { Resource } from './resource';
-import { Tag } from './tag';
-import { ResourceProperties } from './types';
-import { ARMCircularDependencyError } from './errors';
+import { Tag } from '../tag';
+import { ResourceProperties } from '../types';
+import { ARMCircularDependencyError } from '../errors';
 
 interface TestProperties {
   something: string;

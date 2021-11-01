@@ -1,6 +1,6 @@
-import { ARMCircularDependencyError } from './errors';
-import { Tag } from './tag';
-import { ResourceID, ResourceProperties } from './types';
+import { ARMCircularDependencyError } from '../errors';
+import { Tag } from '../tag';
+import { ResourceID, ResourceProperties } from '../types';
 
 export abstract class Resource<TProps> {
   protected abstract readonly type: string;
