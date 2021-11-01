@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "typedoc",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true
+}

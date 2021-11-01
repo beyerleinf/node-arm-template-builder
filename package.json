@@ -4,10 +4,6 @@
   "description": "A Node.js Library to build Azure ARM Templates without the bulk.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
-  "files": [
-    "build",
-    "LICENSE.md"
-  ],
   "engines": {
     "node": ">= 12.0.0"
   },
@@ -34,7 +30,8 @@
     "fix": "gts fix",
     "prepare": "npm run compile",
     "posttest": "npm run lint",
-    "commitlint": "commitlint --config commitlint.config.js --to"
+    "commitlint": "commitlint --config commitlint.config.js --to",
+    "typedoc": "typedoc"
   },
   "dependencies": {},
   "devDependencies": {
@@ -57,6 +54,7 @@
     "sinon": "^11.1.2",
     "source-map-support": "^0.5.20",
     "ts-node": "^10.4.0",
+    "typedoc": "^0.22.7",
     "typescript": "^4.0.3"
   },
   "husky": {
