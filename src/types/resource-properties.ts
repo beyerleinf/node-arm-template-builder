@@ -4,8 +4,4 @@ export type BaseResourceProperties<T> = {
   properties: T;
 };
 
-export type AdditionalResourceProperties<T> = {
-  [P in keyof T]: T[P];
-};
-
-export type ResourceProperties<T, K> = BaseResourceProperties<T> & AdditionalResourceProperties<K>;
+export type ResourceProperties<T, K> = BaseResourceProperties<T> & K;
