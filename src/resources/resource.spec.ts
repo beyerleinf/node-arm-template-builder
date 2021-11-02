@@ -1,14 +1,19 @@
 import { expect } from 'chai';
-import { Resource } from './resource';
+import * as sinon from 'sinon';
+import { ARMCircularDependencyError, ARMResourceAlreadyExistsError } from '../errors';
 import { Tag } from '../tag';
 import { ResourceProperties } from '../types';
-import { ARMCircularDependencyError } from '../errors';
+import { Resource } from './resource';
 
 interface TestProperties {
   something: string;
 }
 
-class TestResource extends Resource<TestProperties> {
+interface TestAdditionalProperties {
+  sku: { hello: string };
+}
+
+class TestResource extends Resource<TestProperties, TestAdditionalProperties> {
   type = 'TEST/TEST';
 
   get resourceId() {
@@ -17,15 +22,18 @@ class TestResource extends Resource<TestProperties> {
 }
 
 describe('Resource', () => {
-  const props: Readonly<ResourceProperties<TestProperties>> = {
+  const props: Readonly<ResourceProperties<TestProperties, TestAdditionalProperties>> = {
     location: 'someLocation',
     name: 'SomeName',
     properties: {
       something: 'hello',
     },
+    sku: {
+      hello: 'world',
+    },
   };
 
-  let resource: Resource<TestProperties>;
+  let resource: Resource<TestProperties, TestAdditionalProperties>;
 
   beforeEach(() => {
     resource = new TestResource(props);
@@ -57,6 +65,7 @@ describe('Resource', () => {
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       resource.addDependency(childResource);
@@ -70,6 +79,7 @@ describe('Resource', () => {
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       resource.addDependency(childResource);
@@ -90,6 +100,7 @@ describe('Resource', () => {
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       childResource.addDependency(resource);
@@ -106,6 +117,7 @@ describe('Resource', () => {
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       resource.addResource(childResource);
@@ -114,18 +126,19 @@ describe('Resource', () => {
       expect(resource.resources).to.contain(childResource);
     });
 
-    it('should not add the same resource twice', () => {
+    it('should throw ARMResourceAlreadyExistsError when resource was already added', () => {
       const childResource = new TestResource({
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       resource.addResource(childResource);
-      resource.addResource(childResource);
 
-      expect(resource.resources).to.have.a.lengthOf(1);
-      expect(resource.resources).to.contain(childResource);
+      expect(() => {
+        resource.addResource(childResource);
+      }).to.throw(ARMResourceAlreadyExistsError);
     });
 
     it('should throw ARMCircularDependencyError when resource is adde to itseld', () => {
@@ -139,6 +152,7 @@ describe('Resource', () => {
         location: 'somewhere',
         name: 'Child',
         properties: { something: 'world' },
+        sku: { hello: 'world' },
       });
 
       childResource.addResource(resource);
@@ -172,6 +186,33 @@ describe('Resource', () => {
       resource.addTag(newTag);
       expect(resource.tags).to.have.a.lengthOf(1);
       expect(resource.tags.get(key)).to.eql(newValue);
+    });
+  });
+
+  describe('toJSON', () => {
+    it('should return correct JSON', () => {
+      const dependentResource = new TestResource({ ...props, name: 'someDependency' });
+      const childResource = new TestResource({ ...props, name: 'someChild' });
+
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      sinon.stub(childResource, 'toJSON').returns({ prop: 'ChildResourceJSON' } as any);
+
+      resource.addDependency(dependentResource);
+      resource.addResource(childResource);
+      resource.addTag(new Tag('myTag', 'myValue'));
+
+      expect(JSON.stringify(resource)).to.eql(
+        JSON.stringify({
+          type: resource.type,
+          name: resource.name,
+          location: resource.location,
+          tags: { myTag: 'myValue' },
+          dependsOn: [dependentResource.resourceId],
+          properties: props.properties,
+          sku: props.sku,
+          resources: [{ prop: 'ChildResourceJSON' }],
+        })
+      );
     });
   });
 });
