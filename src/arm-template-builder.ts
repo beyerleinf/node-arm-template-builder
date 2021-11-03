@@ -43,7 +43,7 @@ export class ARMTemplateBuilder {
   /**
    * Add a resoure to this builder.
    * @param resource The resource to be added.
-   * @throws ARMResourceAlreadyExistsError
+   * @throws {@link ARMResourceAlreadyExistsError}
    */
   addResource<T, K>(resource: Resource<T, K>) {
     if (this._resources.find(x => x.resourceId === resource.resourceId)) {
@@ -53,6 +53,12 @@ export class ARMTemplateBuilder {
     this._resources.push(resource);
   }
 
+  /**
+   * Output this builder as an ARM Template.
+   *
+   * @returns The generated ARM Template.
+   * @throws {@link ARMNoResourcesError}
+   */
   build() {
     if (this._resources.length === 0) {
       throw new ARMNoResourcesError();
