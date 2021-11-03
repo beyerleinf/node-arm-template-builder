@@ -11,8 +11,8 @@ describe('Utils', () => {
 
     it('should maintain string interpolation order', () => {
       const arg1 = 'a';
-      const arg2 = 'multiple';
-      const arg = expr`This is ${arg1} string with ${arg2} arguents.`;
+      const arg2 = 'multiple arguents.';
+      const arg = expr`This is ${arg1} string with ${arg2}`;
 
       expect(arg).to.eql('[This is a string with multiple arguents.]');
     });

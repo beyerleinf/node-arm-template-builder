@@ -1,22 +1,26 @@
 import { ARMCircularDependencyError, ARMResourceAlreadyExistsError } from '../errors';
 import { Tag } from '../tag';
-import { ResourceID, ResourceProperties } from '../types';
+import { ResourceProperties } from '../types';
 
 export abstract class Resource<TProps, TAdditionalProps> {
-  abstract readonly type: string;
   protected _properties: ResourceProperties<TProps, TAdditionalProps>;
   protected _tags: Map<string, string> = new Map();
-  protected _dependencies: ResourceID[] = [];
+  protected _dependencies: string[] = [];
   protected _resources: Resource<unknown, unknown>[] = [];
+
+  /**
+   * The type of the resource.
+   */
+  abstract readonly type: string;
 
   constructor(properties: ResourceProperties<TProps, TAdditionalProps>) {
     this._properties = properties;
   }
 
   /**
-   * Gets this resources Resource ID.
+   * Gets this resources Resource ID in the format `resourceId(...)`.
    */
-  abstract get resourceId(): ResourceID;
+  abstract get resourceId(): string;
 
   get name(): string {
     return this._properties.name;
@@ -44,14 +48,14 @@ export abstract class Resource<TProps, TAdditionalProps> {
   /**
    * Get all dependecies of ths resource. This corresponds to the `dependsOn` field.
    */
-  get dependencies(): ResourceID[] {
+  get dependencies(): string[] {
     return this._dependencies;
   }
 
   /**
    * Add a resource as a dependecy to this resource.
    * @param resource The resource to be added.
-   * @throws ARMCircularDependencyError
+   * @throws {@link ARMCircularDependencyError}
    */
   addDependency<T, K>(resource: Resource<T, K>) {
     if (this._dependencies.includes(resource.resourceId)) return;
@@ -66,8 +70,8 @@ export abstract class Resource<TProps, TAdditionalProps> {
   /**
    * Add a resource as a child resource to this resource.
    * @param resource The resource to be added.
-   * @throws ARMResourceAlreadyExistsError
-   * @throws ARMCircularDependencyError
+   * @throws {@link ARMResourceAlreadyExistsError}
+   * @throws {@link ARMCircularDependencyError}
    */
   addResource<T, K>(resource: Resource<T, K>) {
     if (this._resources.find(x => x.resourceId === resource.resourceId)) {
