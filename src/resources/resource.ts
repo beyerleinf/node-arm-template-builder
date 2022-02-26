@@ -46,14 +46,14 @@ export abstract class Resource<TProps, TAdditionalProps> {
   }
 
   /**
-   * Get all dependecies of ths resource. This corresponds to the `dependsOn` field.
+   * Get all dependencies of ths resource. This corresponds to the `dependsOn` field.
    */
   get dependencies(): string[] {
     return this._dependencies;
   }
 
   /**
-   * Add a resource as a dependecy to this resource.
+   * Add a resource as a dependency to this resource.
    * @param resource The resource to be added.
    * @throws {@link ARMCircularDependencyError}
    */

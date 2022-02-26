@@ -6,6 +6,6 @@
 
 ## Why?
 
-Maintaining large Azure Reasoure Manager (**ARM**) Templates can be cumbersome for large projects and tools like [Pulumi](https://www.pulumi.com/) may not be an option for some. This library aims to make managing ARM Templates easier by closing the gap to "true" Infrstructure as Code.
+Maintaining large Azure Resource Manager (**ARM**) Templates can be cumbersome for large projects and tools like [Pulumi](https://www.pulumi.com/) may not be an option for some. This library aims to make managing ARM Templates easier by closing the gap to "true" Infrastructure as Code.
 
 ## Getting started

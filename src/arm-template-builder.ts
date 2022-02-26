@@ -41,7 +41,7 @@ export class ARMTemplateBuilder {
   }
 
   /**
-   * Add a resoure to this builder.
+   * Add a resource to this builder.
    * @param resource The resource to be added.
    * @throws {@link ARMResourceAlreadyExistsError}
    */

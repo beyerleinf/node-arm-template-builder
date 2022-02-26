@@ -59,7 +59,7 @@ describe('Resource', () => {
     });
   });
 
-  describe('addDependecy', () => {
+  describe('addDependency', () => {
     it('should add dependency', () => {
       const childResource = new TestResource({
         location: 'somewhere',
